@@ -57,8 +57,15 @@ int client_fd = accept(server_fd, (struct sockaddr *)&client_addr,
 
 std::cout << "Client connected\n";
 
-const char *response = "+PONG\r\n";
-send(client_fd, response, strlen(response), 0);
+char buffer[1024];
+  while (true) {
+    int bytes_received = recv(client_fd, buffer, sizeof(buffer), 0);
+    if (bytes_received <= 0) {
+      break;
+    }
+    const char *response = "+PONG\r\n";
+    send(client_fd, response, strlen(response), 0);
+  }
 
 close(client_fd);
 close(server_fd);
